@@ -34,21 +34,22 @@ def register(request):
 
 def upload(request):
     if request.method == 'POST':
-        try:
+        #try:
             name = request.POST['name']
             email = request.POST['email']
             user = User(name=name,email=email)
             user.save()
             for file in request.FILES.getlist('user_img'):
-                img = Image( user=user,user_img=file)
-                img.save()
-                user.img.add(img)
+                image = Image(owner=user,user_img=file)
+                image.save()
+               # user.img.add(image)
             user.save()
             return render(request,'register.html',{'msg':'Data Uploaded Successfully','status':'success'})
-        except Exception as e:
-            return render(request,'register.html',{'msg':"User already exists! Try again with different name.",'status':'danger'})
+        #except Exception as e:
+            #return render(request,'register.html',{'msg':e,'status':'danger'})
     return HttpResponseRedirect('/')
 
+#"User already exists! Try again with different name."
 
 
 from rest_framework.views import APIView
@@ -91,6 +92,7 @@ from django.views.generic import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.edit import CreateView
 from django.db.models import Q
+from .serializers import UserASerializer
 
 from rest_framework.parsers import JSONParser
 from rest_framework.views import APIView
@@ -104,25 +106,23 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import viewsets
 
+from django.contrib.auth.models import User as UserA
 
-class PollListView(generics.GenericAPIView,
-                    mixins.ListModelMixin,
-                    mixins.CreateModelMixin,
-                    mixins.RetrieveModelMixin,
-                    mixins.UpdateModelMixin,
-                    mixins.DestroyModelMixin):
+
+class PollListView(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin,
+                mixins.RetrieveModelMixin, mixins.UpdateModelMixin,mixins.DestroyModelMixin):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     lookup_field = 'id'
     authentication_classes = [TokenAuthentication, SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated, IsAdminUser]
 
-
-
     def get(self, request, id=None):
         if id:
+            print (id)
             return self.retrieve(request, id)
         else:
+            print (id)
             return self.list(request)
 
     def post(self, request):
@@ -144,8 +144,8 @@ class PollListView(generics.GenericAPIView,
 
 
 class userviewset(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+    queryset = UserA.objects.all()
+    serializer_class = UserASerializer
 
 
 

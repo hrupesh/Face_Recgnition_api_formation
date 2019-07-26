@@ -9,6 +9,7 @@ from rest_framework.routers import DefaultRouter, SimpleRouter
 
 urlpatterns = [
     url(r'^api/users/', PollListView.as_view()),
+    url(r'^api/userA/', userviewset ),
     url(r'^api/users/(?P<slug>[\w-]+)/$', PollListView.as_view()),
     #url(r'aa/', views.PostList.as_view()),
     #url(r'^<int:pk>/', views.PostDetail.as_view()),

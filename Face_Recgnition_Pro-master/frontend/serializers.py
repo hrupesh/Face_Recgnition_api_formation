@@ -16,7 +16,12 @@ class UserSerializer(serializers.ModelSerializer):
     img = ImageSerializer(many=True)
     class Meta:
         model = User
-        fields = ('name','email','created_at','updated_at','img')
+        fields = ('__all__')
+
+class UserASerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserA
+        fields = ('__all__')
 
 
 
